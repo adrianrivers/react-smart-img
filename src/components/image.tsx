@@ -1,6 +1,7 @@
-import { cn } from '@/lib/utils'
 import React from 'react'
 import { preload } from 'react-dom'
+
+import { cn } from '@/lib/utils'
 
 interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string
