@@ -21,7 +21,6 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
     return (
       <img
         ref={ref}
-        data-state={isLoading ? 'loading' : 'loaded'}
         loading={loading}
         src={src}
         srcSet={srcSet}
