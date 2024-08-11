@@ -8,6 +8,11 @@ interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   priority?: boolean
 }
 
+/**
+ * Gotcha - Lazy loading will only work on Firefox if the loading attribute is set before the src attribute
+ * https://bugzilla.mozilla.org/show_bug.cgi?id=1647077
+ *
+ */
 const Image = React.forwardRef<HTMLImageElement, ImageProps>(
   ({ src, srcSet, sizes, loading, priority, className, ...props }, ref) => {
     const isLazy = loading === 'lazy' && !priority
