@@ -9,12 +9,25 @@ interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 }
 
 /**
- * Gotcha - Lazy loading will only work on Firefox if the loading attribute is set before the src attribute
+ * Gotcha -
+ * Lazy loading will only work on Firefox if the loading attribute is set before the src attribute
  * https://bugzilla.mozilla.org/show_bug.cgi?id=1647077
- *
  */
 const Image = React.forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, srcSet, sizes, loading, priority, className, ...props }, ref) => {
+  (
+    {
+      src,
+      srcSet,
+      sizes,
+      loading,
+      priority,
+      width = '100%',
+      height = 'auto',
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const isLazy = loading === 'lazy' && !priority
 
     const [isError, setIsError] = React.useState(false)
@@ -25,22 +38,33 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
     }
 
     return (
-      <img
-        ref={ref}
-        loading={loading}
-        src={src}
-        srcSet={srcSet}
-        sizes={sizes}
-        onError={() => setIsError(true)}
-        onLoad={() => setIsLoading(false)}
-        className={cn('w-full object-cover text-transparent', className, {
-          'animate-pulse bg-gray-200/20 blur-sm': isLoading && !isError,
-          'animate-fade-in blur-0': !isLoading && !isError,
-          'relative before:absolute before:inset-0 before:size-full before:bg-gray-200/20':
-            isError,
+      <figure
+        className={cn('size-full transition-all duration-700', {
+          'animate-pulse bg-gray-200/20': isLoading && !isError,
+          'bg-transparent': !isLoading && !isError,
         })}
-        {...props}
-      />
+      >
+        <img
+          ref={ref}
+          loading={loading}
+          src={src}
+          srcSet={srcSet}
+          sizes={sizes}
+          onError={() => setIsError(true)}
+          onLoad={() => setIsLoading(false)}
+          className={cn(
+            'w-full animate-fade-in object-cover text-transparent transition-all duration-500',
+            className,
+            {
+              'opacity-0 blur-sm': isLoading && !isError,
+              'opacity-100': !isLoading && !isError,
+            }
+          )}
+          width={width}
+          height={height}
+          {...props}
+        />
+      </figure>
     )
   }
 )
